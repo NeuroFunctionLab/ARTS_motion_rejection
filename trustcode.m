@@ -317,6 +317,14 @@ function process_Callback(hObject, eventdata, handles)
 % hObject    handle to deltar2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+addpath([pwd '\utility']);
+if get(handles.checkbox5,'Value')==1
+    bIsNeonate = 1;
+else
+    bIsNeonate = 0;
+end
+
+Threshold_epsilon = str2num(get(handles.edit18,'String'));
 i=str2num(get(handles.dynamic,'string'));
 j=length(str2num(get(handles.sequence,'String')));
 if(i~=j||mod(i,2)~=0);
@@ -340,8 +348,8 @@ hct=str2num(get(handles.Hct,'String'));
 get(0,'currentfig');
 
 % [t2,ci,Yv]=trust51combine_SS_4te_6dyn_GUI_linux(filename1,matrix,seq,hct);
-% Dengrong Jiang, 5/14/2018: Compute labelling efficiency
-[t2,ci,Yv, LabelEff] = trustcode_pl_GUI(filename1,matrix,seq,hct);
+% Yifan Gou, 8/23/2023: Add ARTS to TRUST process
+[t2,ci,Yv, LabelEff] = trustcode_pl_GUI_ARTS(filename1,matrix,seq,hct,bIsNeonate,Threshold_epsilon);
 % figure(findall(0,'Tag','MyGUI'));
 t2
 ci
@@ -565,3 +573,73 @@ set(handles.dynamic,'String',' ');
 end;
     
 guidata(hObject,handles);
+
+
+% --- Executes on selection change in popupmenu4.
+function popupmenu4_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu4 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu4
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit18_Callback(hObject, eventdata, handles)
+% hObject    handle to edit18 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit18 as text
+%        str2double(get(hObject,'String')) returns contents of edit18 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit18_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit18 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in checkbox5.
+function checkbox5_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if get(handles.checkbox5,'Value')==0
+    set(handles.checkbox5,'Value',1);
+end
+set(handles.checkbox6,'Value',0);
+% Hint: get(hObject,'Value') returns toggle state of checkbox5
+
+
+% --- Executes on button press in checkbox6.
+function checkbox6_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if get(handles.checkbox6,'Value')==0
+    set(handles.checkbox6,'Value',1);
+end
+set(handles.checkbox5,'Value',0);
+% Hint: get(hObject,'Value') returns toggle state of checkbox6
