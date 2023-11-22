@@ -1,4 +1,4 @@
-function [RepTime4eTE, RefMask] = GetRefIndV2(varargin)
+function [RepTime4eTE, RefMask] = GetRefInd_otsu_BIOCARD(varargin)
     % Function to calculate best reference image among label images using different methods
     % based on maxmizing total similarity between reference images
     % Version 2.0: seq as input to specify acquisition sequence (eTE & dyn)
