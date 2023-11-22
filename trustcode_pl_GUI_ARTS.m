@@ -34,8 +34,13 @@ end
 roiflag=0;
 bloodt1=1624;
 ti=1020;
-rowspacing=2.5;
-columnspacing=2.5;
+if bIsNeonate
+    rowspacing=2.5;
+    columnspacing=2.5;
+else
+    rowspacing=220/64;
+    columnspacing=220/64;
+end
 slicespacing=5;
 nlist=4; % number of voxels for averaging
 dilateSize = 2;
@@ -214,7 +219,7 @@ end
 mask=zeros(rownum,columnnum,etelen);
 
 % Detect outliers --------------------------------------------------------
-label_mean_noSSS_bottom = zeros(totaldyn);
+label_mean_noSSS_bottom = zeros(totaldyn,1);
 control_all_mat = imgall(:,:,2:2:end);
 label_all_mat = imgall(:,:,1:2:end);
 diff_all_mat = imgall(:,:,2:2:end) - imgall(:,:,1:2:end);
@@ -229,11 +234,12 @@ saveas(gcf, [fname_path, filesep, 'control_all.fig']);
 show_imgs_sc(abs(diff_all_mat),1:totaldyn/2, 0,100);
 saveas(gcf, [fname_path, filesep, 'diff_all.fig']);
 % ind2exclude = input('Manual exclusion: ');
-[L1_bottom_noSSS_retained, mask_bottom_retained_noSSS] = CalL1NoSSS_threshV2(label_all_mat,diff_all_mat,dilateSize,SNR_selected,dynnum);
-for idyn = 1:totaldyn
-    label_mean_noSSS_bottom(idyn) = mean(label_all_mat(logical(mask_bottom_retained_noSSS(:,:))));
+[L1_bottom_noSSS_retained, mask_bottom_retained_noSSS] = CalL1NoSSS_threshV2(label_all_mat,diff_all_mat,dilateSize,SNR_selected,dynnum/2);
+for idyn = 1:totaldyn/2
+    cnt_label = label_all_mat(:,:,idyn);
+    label_mean_noSSS_bottom(idyn) = mean(cnt_label(logical(mask_bottom_retained_noSSS(:,:))));
 end
-average_label_mean_noSSS_bottom_eTE0 = mean(label_mean_noSSS_bottom(1:dynnum));
+average_label_mean_noSSS_bottom_eTE0 = mean(label_mean_noSSS_bottom(1:dynnum/2));
 epsilon = L1_bottom_noSSS_retained'./average_label_mean_noSSS_bottom_eTE0;
 ind2exclude = find(epsilon>Threshold_epsilon)
 % check if any excluded dynamics are eTE0
